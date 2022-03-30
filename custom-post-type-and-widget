@@ -1,0 +1,89 @@
+/*******************************
+FAQ Custom Post Type INIT
+*********************************/
+add_action( 'init', 'custom_post_type_faq', 0 );
+function custom_post_type_faq() {
+    $args = array(
+        'label'               => __( 'Paradise Seeds FAQ\'s', 'shoptimizer' ),
+        'description'         => __( 'Paradise Seeds FAQ\'s', 'shoptimizer' ),
+        'labels'              => array(
+            'name' => __( 'Paradise Seeds FAQ\'s'),
+            'singular_name' => __( 'Faq' )
+        ),
+        'supports'            => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'revisions', 'custom-fields', ),
+        'hierarchical'        => false,
+        'public'              => true,
+        'show_ui'             => true,
+        'show_in_menu'        => true,
+        'show_in_nav_menus'   => true,
+        'show_in_admin_bar'   => true,
+        'menu_position'       => 5,
+        'can_export'          => true,
+        'has_archive'         => true,
+        'exclude_from_search' => false,
+        'publicly_queryable'  => true,
+        'capability_type'     => 'page',
+        'show_in_rest'        => true,
+        'rewrite' => array('slug' => 'faq'),
+        // This is where we add taxonomies to our CPT
+        'taxonomies'          => array( 'faq-cat' ),
+    );
+
+    // Registering your Custom Post Type
+    register_post_type( 'faq', $args );
+
+}
+//Create FAQs taxonomy
+add_action( 'init', 'create_subjects_hierarchical_taxonomy_faq', 0 );
+function create_subjects_hierarchical_taxonomy_faq() {
+    $labels = array(
+        'name' => _x( 'FAQ Categories', 'taxonomy general name' ),
+        'singular_name' => _x( 'Faq category', 'taxonomy singular name' ),
+        'search_items' =>  __( 'Search FAQ categories' ),
+        'all_items' => __( 'All FAQ categories' ),
+        'parent_item' => __( 'Parent FAQcategorie' ),
+        'parent_item_colon' => __( 'Parent FAQ categorie:' ),
+        'edit_item' => __( 'Edit FAQcategorie' ),
+        'update_item' => __( 'Update categorie' ),
+        'add_new_item' => __( 'Add New FAQ categorie' ),
+        'new_item_name' => __( 'New FAQ categorie Name' ),
+        'menu_name' => __( 'FAQ Categories' ),
+    );
+
+// Register the FAQs taxonomy
+register_taxonomy('faq-cat',array('faq'), array(
+    'hierarchical' => true,
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_in_rest' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => __('customer-service') ),
+        'show_in_menu'        => true,
+        'show_in_nav_menus'   => true,
+        'show_in_admin_bar'   => true,
+        'menu_position'       => 19,
+        'can_export'          => true,
+        'has_archive'         => true,
+        'exclude_from_search' => false,
+        'publicly_queryable'  => true,
+        'capability_type'     => 'post',
+    ));
+
+}
+// Register a Sidebar for the FAQs
+add_action( 'widgets_init', 'faq_sidebar_widgets' );
+function faq_sidebar_widgets() {
+    register_sidebar(
+        array (
+            'name' => __( 'Faq sidebar', 'shoptimizer' ),
+            'id' => 'portfolio_sidebar',
+            'description' => __( 'Faq sidebar page', 'shoptimizer' ),
+            'before_widget' => '<asside id="nav_menu-5" class="widget sbg_widget PortfolioSidebar widget_nav_menu">',
+            'after_widget' => "</asside>",
+            'before_title' => '<h3 class="widget-title faq-title-widget sbg_title">',
+            'after_title' => '</h3>',
+        )
+    );
+
+}
